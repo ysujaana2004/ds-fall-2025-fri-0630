@@ -16,10 +16,10 @@
 
 ### Office Hours
 * Georgios Ioannou: DM to set up a meeting
-* Ahmad Basyouni  :
-* Hussam Marzooq  : Fridays 07:00 PM - 08:00 PM
-* Jessica Lau     : DM to set up a meeting
-* Kevin Li        : Fridays 09:00 PM -10:00 PM
+* Ahmad Basyouni:
+* Hussam Marzooq: Fridays 07:00 PM - 08:00 PM
+* Jessica Lau: DM to set up a meeting
+* Kevin Li: Fridays 09:00 PM -10:00 PM
 
 # Syllabus
 
@@ -96,8 +96,8 @@ __HW assignments can be found in that each weeks README.md file. Open that weeks
 
 __All HWs are due at 12:01 PM (noon) the day before the next class__
 
-* Tue class: HW due 12:01 PM on Monday
-* Wed class: HW due 12:01 PM on Tuesday
+* Tuesday class: HW due 12:01 PM on Monday
+* Wednesday class: HW due 12:01 PM on Tuesday
 * Fridays (both 12:30 PM and 06:30 PM): HW due 12:01 PM on Thursday
 
 __Submit your HW assignments to the form below:__
