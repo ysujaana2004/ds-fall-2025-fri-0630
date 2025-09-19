@@ -22,7 +22,7 @@ def load_data(filepath):
         return None
 
 # --- Main Application ---
-movie_data = load_data('movie_ratings.csv')
+movie_data = load_data('/workspaces/ds-fall-2025-fri-0630/Week-03-EDA-and-Dashboards/data/movie_ratings.csv')
 
 st.title("🎬 MovieLens 200k Ratings Analysis")
 st.markdown("This dashboard explores the MovieLens dataset to uncover insights about movie genres, ratings, and trends over time.")
