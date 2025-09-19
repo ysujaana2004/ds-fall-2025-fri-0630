@@ -5,119 +5,250 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-# --- Page Configuration ---
-# Set the layout and title for the Streamlit page.
-st.set_page_config(layout="wide", page_title="MovieLens Ratings Dashboard")
+st.set_page_config(page_title="MovieLens Dashboard (Week 3)", layout="wide")
 
-# --- Data Loading and Caching ---
-# Use st.cache_data to load and process the data only once, which improves performance.
-@st.cache_data
-def load_data(filepath):
+
+@st.cache_data(ttl=3600)
+def load_movie_ratings() -> pd.DataFrame:
+    f"""Load the movie ratings dataset from the Week 3 data folder.
+
+    The app is located at: Week-03-EDA-and-Dashboards/exercise/name_dashboard/app.py
+    The data lives at:      Week-03-EDA-and-Dashboards/data/movie_ratings.csv
     """
-    Loads the MovieLens ratings data from a CSV file.
-    """
+    data_path = Path(__file__).resolve().parents[2] / "data" / "movie_ratings.csv"
+    df = pd.read_csv(data_path)
+    return df
+
+
+def render_header() -> None:
+    st.title("MovieLens Dashboard")
+    st.caption("Week 3 — EDA and Dashboards")
+
+
+def render_sidebar(df: Optional[pd.DataFrame]) -> dict:
+    with st.sidebar:
+        st.header("Controls")
+        show_raw = st.toggle("Show raw data preview", value=False)
+
+        controls = {"show_raw": show_raw}
+        return controls
+
+
+def main() -> None:
+    render_header()
+
+    # Load data
     try:
-        df = pd.read_csv(filepath)
-        # The 'genres' column contains pipe-separated values. We'll handle this later
-        # for specific questions that require analyzing individual genres.
-        return df
+        df = load_movie_ratings()
     except FileNotFoundError:
-        st.error(f"Error: The file '{filepath}' was not found. Please make sure it's in the same folder as the script.")
-        return None
+        st.error(
+            "Could not find data file at ../data/movie_ratings.csv. "
+            "Verify the project layout matches the course repo."
+        )
+        return
 
-# --- Main Application ---
+    controls = render_sidebar(df)
 
-# Load the data using the function defined above.
-# The user must place their 'movie_ratings.csv' file in the same directory.
-movie_data = load_data('/workspaces/ds-fall-2025-fri-0630/Week-03-EDA-and-Dashboards/data/movie_ratings.csv')
+    if controls.get("show_raw"):
+        with st.expander("Raw data (first 50 rows)", expanded=False):
+            st.dataframe(df.head(50), use_container_width=True)
 
-# Main title of the dashboard
-st.title("🎬 MovieLens 200k Ratings Analysis")
-st.markdown("This dashboard explores the MovieLens dataset to uncover insights about movie genres, ratings, and trends over time.")
-
-if movie_data is not None:
-    
-    # --- Question 1: Genre Breakdown ---
-    st.header("1. What is the breakdown of movie genres?")
-    st.markdown("This chart shows the total number of ratings given to movies in each genre.")
-    
-    # To count genres, we need to handle the pipe-separated 'genres' column.
-    # First, we drop rows where 'genres' is missing to avoid errors.
-    genres_df = movie_data.dropna(subset=['genres']).copy()
-    # We split the string into a list of genres for each row.
-    genres_df['genres'] = genres_df['genres'].str.split('|')
-    # The 'explode' function creates a new row for each genre in the list,
-    # duplicating the other information for that rating.
-    exploded_genres = genres_df.explode('genres')
-    
-    # Now we can simply count the occurrences of each genre.
-    genre_counts = exploded_genres['genres'].value_counts()
-    
-    fig1 = px.bar(
-        genre_counts,
-        x=genre_counts.index,
-        y=genre_counts.values,
-        title="Total Ratings per Genre",
-        labels={'x': 'Genre', 'y': 'Number of Ratings'}
+    # Tabs per question (outline only for now)
+    tabs = st.tabs(
+        [
+            "Q1: Genre breakdown",
+            "Q2: Avg rating by genre",
+            "Q3: Avg rating by release year",
+            "Q4: Top movies by ratings (placeholder)",
+        ]
     )
-    st.plotly_chart(fig1, use_container_width=True)
 
-    # --- Question 2: Highest Rated Genres ---
-    st.header("2. Which genres have the highest viewer satisfaction?")
-    st.markdown("This chart displays the average rating for each genre, sorted from highest to lowest.")
-    
-    # We can reuse the 'exploded_genres' DataFrame from the previous question.
-    # We group by genre and calculate the mean of the 'rating' for each.
-    avg_genre_ratings = exploded_genres.groupby('genres')['rating'].mean().sort_values(ascending=False)
-    
-    fig2 = px.bar(
-        avg_genre_ratings,
-        x=avg_genre_ratings.values,
-        y=avg_genre_ratings.index,
-        orientation='h', # Horizontal bar chart
-        title="Average Rating by Genre",
-        labels={'x': 'Average Rating (1-5)', 'y': 'Genre'}
-    )
-    fig2.update_layout(yaxis={'categoryorder':'total ascending'}) # Sorts the y-axis to match the data
-    st.plotly_chart(fig2, use_container_width=True)
+    with tabs[0]:
+        st.subheader("Q1: What's the breakdown of genres for the movies that were rated?")
+        st.caption("Pie chart of rating counts by pre-exploded 'genres'.")
 
-    # --- Question 3: Mean Rating Across Release Years ---
-    st.header("3. How does mean rating change across movie release years?")
-    st.markdown("This line chart illustrates the trend of average movie ratings based on their release year.")
-    
-    # Group the original data by 'year' and calculate the mean 'rating'.
-    # We drop NaN values in 'year' and convert it to an integer for a cleaner axis.
-    yearly_ratings = movie_data.dropna(subset=['year']).copy()
-    yearly_ratings['year'] = yearly_ratings['year'].astype(int)
-    avg_rating_by_year = yearly_ratings.groupby('year')['rating'].mean().reset_index()
+        # Controls for grouping small slices
+        min_pct = st.slider(
+            "Group slices under this percentage into 'Other'",
+            min_value=0.0,
+            max_value=10.0,
+            value=2.0,
+            step=0.5,
+            help="Genres contributing less than this percent will be grouped as 'Other'.",
+        )
 
-    fig3 = px.line(
-        avg_rating_by_year,
-        x='year',
-        y='rating',
-        title='Average Movie Rating by Release Year',
-        labels={'year': 'Release Year', 'rating': 'Average Rating'}
-    )
-    st.plotly_chart(fig3, use_container_width=True)
-    
-    # --- Question 4: Best-Rated Movies with Minimum Ratings ---
-    st.header("4. What are the best-rated movies?")
-    st.markdown("To find the best movies, we calculate the average rating and the total number of ratings for each title. This avoids rewarding movies with a single 5-star rating.")
+        # Aggregate counts by genre (data is already pre-exploded)
+        genre_counts = (
+            df.groupby("genres", dropna=False)
+            .size()
+            .reset_index(name="count")
+            .sort_values("count", ascending=False)
+        )
 
-    # We group by 'title' and aggregate to get both the count and mean of ratings.
-    movie_stats = movie_data.groupby('title')['rating'].agg(['count', 'mean']).reset_index()
-    
-    # Use columns to display the two lists side-by-side.
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader("Top 5 (at least 50 ratings)")
-        # Filter for movies with at least 50 ratings, then sort by mean rating.
-        top_50 = movie_stats[movie_stats['count'] >= 50].sort_values('mean', ascending=False).head(5)
-        st.dataframe(top_50.reset_index(drop=True))
+        total = genre_counts["count"].sum()
+        genre_counts["pct"] = 100 * genre_counts["count"] / max(total, 1)
 
-    with col2:
-        st.subheader("Top 5 (at least 150 ratings)")
-        # Filter for movies with at least 150 ratings, then sort by mean rating.
-        top_150 = movie_stats[movie_stats['count'] >= 150].sort_values('mean', ascending=False).head(5)
-        st.dataframe(top_150.reset_index(drop=True))
+        # Group small categories into 'Other'
+        major = genre_counts[genre_counts["pct"] >= min_pct].copy()
+        minor = genre_counts[genre_counts["pct"] < min_pct]
+        if not minor.empty:
+            other_row = pd.DataFrame({
+                "genres": ["Other"],
+                "count": [int(minor["count"].sum())],
+                "pct": [minor["pct"].sum()],
+            })
+            display_df = pd.concat([major, other_row], ignore_index=True)
+        else:
+            display_df = major
+
+        fig = px.pie(
+            display_df,
+            names="genres",
+            values="count",
+            title="Composition of Ratings by Genre",
+            hole=0.0,
+        )
+        fig.update_traces(textposition="inside", textinfo="percent+label")
+        st.plotly_chart(fig, use_container_width=True)
+
+    with tabs[1]:
+        st.subheader("Q2: Which genres have the highest viewer satisfaction?")
+        st.caption("Interactive bar chart of mean rating by genre (pre-exploded 'genres').")
+
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            min_count = st.number_input(
+                "Minimum number of ratings per genre",
+                min_value=0,
+                max_value=10000,
+                value=50,
+                step=10,
+                help="Filter out genres with too few ratings to reduce noise.",
+            )
+        with col2:
+            sort_order = st.radio(
+                "Sort by mean rating",
+                options=["Descending", "Ascending"],
+                horizontal=True,
+            )
+
+        # Compute mean rating and counts per genre
+        genre_stats = (
+            df.groupby("genres", dropna=False)
+            .agg(mean_rating=("rating", "mean"), n_ratings=("rating", "size"))
+            .reset_index()
+        )
+        filtered = genre_stats[genre_stats["n_ratings"] >= min_count].copy()
+        ascending = sort_order == "Ascending"
+        filtered = filtered.sort_values("mean_rating", ascending=ascending)
+
+        fig2 = px.bar(
+            filtered,
+            x="genres",
+            y="mean_rating",
+            hover_data={"n_ratings": True, "mean_rating": ":.2f"},
+            title="Average Rating by Genre",
+        )
+        fig2.update_layout(xaxis_title="Genre", yaxis_title="Average Rating (1–5)")
+        st.plotly_chart(fig2, use_container_width=True)
+
+    with tabs[2]:
+        st.subheader("Q3: How does mean rating change across movie release years?")
+        st.caption("Interactive line chart of mean rating by release year.")
+
+        # Controls
+        min_year, max_year = int(df["year"].min()), int(df["year"].max())
+        year_range = st.slider(
+            "Year range",
+            min_value=min_year,
+            max_value=max_year,
+            value=(min_year, max_year),
+            step=1,
+        )
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            min_count_year = st.number_input(
+                "Minimum ratings per year",
+                min_value=0,
+                max_value=100000,
+                value=50,
+                step=10,
+            )
+        with col2:
+            smooth_window = st.slider(
+                "Rolling mean window (years)", min_value=1, max_value=9, value=1, step=1
+            )
+
+        # Aggregate by year
+        year_stats = (
+            df.groupby("year", dropna=False)
+            .agg(mean_rating=("rating", "mean"), n_ratings=("rating", "size"))
+            .reset_index()
+        )
+        # Filter by selected range and min count
+        lo, hi = year_range
+        mask = (year_stats["year"] >= lo) & (year_stats["year"] <= hi)
+        year_filtered = year_stats[mask & (year_stats["n_ratings"] >= min_count_year)].copy()
+        year_filtered = year_filtered.sort_values("year")
+
+        # Optional smoothing
+        if smooth_window and smooth_window > 1 and not year_filtered.empty:
+            year_filtered["mean_rating_smoothed"] = (
+                year_filtered["mean_rating"].rolling(window=smooth_window, center=True).mean()
+            )
+        else:
+            year_filtered["mean_rating_smoothed"] = year_filtered["mean_rating"]
+
+        fig3 = px.line(
+            year_filtered,
+            x="year",
+            y="mean_rating_smoothed",
+            hover_data={"n_ratings": True, "mean_rating": ":.2f"},
+            title="Movie Release Year vs Average Rating",
+        )
+        fig3.update_layout(xaxis_title="Movie Release Year", yaxis_title="Average Rating")
+        st.plotly_chart(fig3, use_container_width=True)
+
+    with tabs[3]:
+        st.subheader("Q4: Top movies by average rating (interactive)")
+        st.caption("Horizontal bar chart of top movies; size = number of ratings.")
+
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            min_ratings_movie = st.number_input(
+                "Minimum number of ratings per movie",
+                min_value=1,
+                max_value=100000,
+                value=50,
+                step=10,
+            )
+        with col2:
+            top_n = st.slider("Top N movies", min_value=3, max_value=25, value=5, step=1)
+
+        movie_stats = (
+            df.groupby(["movie_id", "title"], dropna=False)
+            .agg(mean_rating=("rating", "mean"), n_ratings=("rating", "size"))
+            .reset_index()
+        )
+        movie_filtered = movie_stats[movie_stats["n_ratings"] >= min_ratings_movie].copy()
+        top_movies = movie_filtered.sort_values(
+            ["mean_rating", "n_ratings"], ascending=[False, False]
+        ).head(top_n)
+
+        # Plot horizontal bar where bar length is mean rating; marker size encodes n_ratings
+        fig4 = px.bar(
+            top_movies,
+            y="title",
+            x="mean_rating",
+            orientation="h",
+            hover_data={"n_ratings": True, "mean_rating": ":.2f"},
+            title=f"Top {top_n} Movies by Average Rating (min {min_ratings_movie} ratings)",
+        )
+        fig4.update_layout(xaxis_title="Average Rating (1–5)", yaxis_title="Movie Title")
+        st.plotly_chart(fig4, use_container_width=True)
+
+
+if __name__ == "__main__":
+    main()
+
+
