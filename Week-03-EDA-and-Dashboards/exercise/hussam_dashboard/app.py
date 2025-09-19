@@ -18,11 +18,11 @@ def load_data(filepath):
         df = pd.read_csv(filepath)
         return df
     except FileNotFoundError:
-        st.error(f"Error: The file '{filepath}' was not found. Please make sure it's in the same folder as the script.")
+        st.error(f"Error: The file '{filepath}' was not found.")
         return None
 
 # --- Main Application ---
-movie_data = load_data('movie_ratings.csv')
+movie_data = load_data('Week-03-EDA-and-Dashboards/data/movie_ratings.csv')
 
 st.title("🎬 MovieLens 200k Ratings Analysis")
 st.markdown("This dashboard explores the MovieLens dataset to uncover insights about movie genres, ratings, and trends over time.")
