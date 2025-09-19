@@ -29,7 +29,7 @@ def load_data(filepath):
 
 # Load the data using the function defined above.
 # The user must place their 'movie_ratings.csv' file in the same directory.
-movie_data = load_data('movie_ratings.csv')
+movie_data = load_data('/workspaces/ds-fall-2025-fri-0630/Week-03-EDA-and-Dashboards/data/movie_ratings.csv')
 
 # Main title of the dashboard
 st.title("🎬 MovieLens 200k Ratings Analysis")
