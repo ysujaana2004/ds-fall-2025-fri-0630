@@ -14,15 +14,15 @@
 
 --- 
 
-# Homework Due Thursday 09/25/2025
+# Homework Due Thursday 10/02/2025
 
 ---
 
-**_All HWs are due 1 day before the next class begins by 12:01 PM (Noon) - Thursday, September 25, 2025._**
+**_All HWs are due 1 day before the next class begins by 12:01 PM (Noon) - Thursday, October 02, 2025._**
 
 _Submit them via the [HW Submssions Form](https://forms.gle/MFH173MZaQ5TquCB6)_
 
-**DEADLINE: Thursday, September 25, 2025**
+**DEADLINE: Thursday, October 02, 2025**
 
 ---
 
