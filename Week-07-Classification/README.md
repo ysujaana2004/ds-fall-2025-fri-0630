@@ -40,7 +40,7 @@ _Submit them via the new [HW Submssions Sheet](https://docs.google.com/spreadshe
 
 1. Pre-Class Videos
 2. Exercise.ipynb
-3. Mee with your team and make progress on your project
+3. Meet with your team and make progress on your project
 
 ## 0.  Pre-Class Videos (help you prepare for the Regression Lecture)
 1. StatQuest videos on: 
