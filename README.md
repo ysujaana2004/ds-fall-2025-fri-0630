@@ -11,8 +11,11 @@
 - If you dont have permission to view doc you are using the wrong email.
 
 ## [HW Submission Form](https://forms.gle/Ea1TnJ6D2NT6otBV9)
-* You fill this out for each individual HW assignment
+* You fill this out for each individual HW assignment.
 * HW assignments can be found inside each week's `README`.
+
+## After 10/10/2025: [New HW Submission Sheet](https://docs.google.com/spreadsheets/d/1vS8dL-qa5dXKhBrylpCS-WA_eTbpIo8wt-kN68aZF6Y/edit?gid=0#gid=0)
+* Use this **NEW** Homework Submission Sheet to submit your HW after 10/10/2025.
 
 ### Office Hours
 * Georgios Ioannou: DM to set up a meeting
@@ -26,13 +29,13 @@
 * Week 01 (Week of Aug 25): Pandas 1 [~1hr]  &&  Proper Github Workflow in class. [~1hr]
 * Week 02 (Week of Sep 01): Pandas 2
 * Week 03 (Week of Sep 08): EDA // Data Viz // Dashboards
-* Week 04 (Week of Sep 15): Career Counselor Lecture [~1hr] && Real World Work && Making Teams
+* Week 04 (Week of Sep 15): Career Counselor Lecture [~1hr] && Real World Group Working && SCRUM && Making Teams
 * Week XX (Week of Sep 22): No Class
-* Week 05 (Week of Sep 29): Stats and Business Analytics 
-* Week 06 (Week of Oct 06): Regressors via Linear Regression 
-* Week 07 (Week of Oct 13): Classifiers via Logistic Regression 
-* Week 08 (Week of Oct 20): Decision Trees / Random Forest 
-* Week 09 (Week of Oct 27): Thinking Like a Data Scientist and Vibe Coding
+* Week 05 (Week of Sep 29): Thinking Like a Data Scientist and Vibe Coding
+* Week 06 (Week of Oct 06): Business Analytics and Stats
+* Week 07 (Week of Oct 13): Classifiers via Logistic Regression
+* Week 08 (Week of Oct 20): Regressors via Linear Regression
+* Week 09 (Week of Oct 27): Decision Trees / Random Forest
 * Week 10 (Week of Nov 03): AI Part 1
 * Week 11 (Week of Nov 10): Career Counselor Lecture [~1hr] & AI Part 2
 * Week 12 (Week of Nov 17): Deployment
@@ -89,8 +92,8 @@ _*Syllabus and topics are subject to change_
 14. Now you are ready to start from step 0, by making new branch for the current week and do the work like described above in order. Happy coding!
 
 ## Homework Submission
-- All homework is due at 12:01 PM (noon) the day before the next class
-- Submit GitHub PR links to your completed exercise
+- All homework is due at 12:01 PM (noon) the day before the next class.
+- Submit GitHub links to your completed exercise.
 # Homework Instructions: How to hand in your HWs.
 __HW assignments can be found in that each weeks README.md file. Open that weeks folder to find assignment__
 
@@ -103,6 +106,9 @@ __All HWs are due at 12:01 PM (noon) the day before the next class__
 __Submit your HW assignments to the form below:__
 * [Main HW submission form](https://forms.gle/Ea1TnJ6D2NT6otBV9)
 * Further instructions are inside the form.
+
+__After 10/10/2025: [New HW Submission Sheet](https://docs.google.com/spreadsheets/d/1vS8dL-qa5dXKhBrylpCS-WA_eTbpIo8wt-kN68aZF6Y/edit?gid=0#gid=0)__
+* Use this **NEW** Homework Submission Sheet to submit your HW after 10/10/2025.
 
 
 ## There are usually 3 sections of HW every week.
